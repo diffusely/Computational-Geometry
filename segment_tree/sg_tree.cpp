@@ -12,12 +12,41 @@ SG_tree::SG_tree(const std::vector<int> &vec, std::function<int(int, int)> f, in
 
 int SG_tree::query(int left, int right)
 {
-	return 0;
+	int n = _tree.size() / 2;
+	int res = _defVal;
+
+	left = _tree.size() - left - 1;
+	right = _tree.size() - right - 1;
+
+	while (left >= right)
+	{
+		if (right % 2 == 1)
+		{
+			res = _foo(res, _tree[right]);
+			++right;
+		}
+		if (left % 2 == 0)
+		{
+			res = _foo(res, _tree[left]);
+			--left;
+		}
+		left /= 2;
+		right /= 2;
+	}
+
+	return res;
 }
 
-int SG_tree::update(int pos, int val)
+void SG_tree::update(int pos, int val)
 {
-	return 0;
+	int i = _tree.size() - pos - 1;
+	_tree[i] = val;
+
+	while (i > 1)
+	{
+		i /=  2;
+		_tree[i] = _foo(_tree[i * 2], _tree[i * 2 + 1]);
+	}
 }
 
 void SG_tree::print() const
@@ -25,6 +54,14 @@ void SG_tree::print() const
 	for (size_t i = 0; i < _tree.size(); i++)
 		std::cout << _tree[i] << " ";
 	std::cout << "\n";
+}
+
+void SG_tree::set_function(const std::vector<int> &vec,
+	std::function<int(int, int)> f, int def)
+{
+	_foo = f;
+	_defVal = def;
+	construct(vec);
 }
 
 void SG_tree::construct(const std::vector<int>& vec)

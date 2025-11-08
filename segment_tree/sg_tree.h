@@ -13,9 +13,11 @@ public:
 			int defVal);
 
 	int query(int left, int right);
-	int update(int pos, int val);
+	void update(int pos, int val);
 
 	void print() const;
+	void set_function(const std::vector<int> &vec, 
+						std::function<int(int, int)> f, int def);
 
 private:
 
